@@ -65,6 +65,9 @@ pub fn disband(_w: &mut World, _name: &str) -> bool { false }
 
 /// Enforcers of units whose writ runs at `place` and who are on duty now.
 pub fn on_duty_at(_w: &World, _place: PlaceId) -> Vec<PersonId> { Vec::new() }
+/// Where an enforcer on shift should be standing now (their unit's posting for this hour), if on shift.
+/// `life` walks them there with `Activity::Patrol`.
+pub fn post_for(_w: &mut World, _enforcer: PersonId) -> Option<PlaceId> { None }
 /// All enforcers on the payroll of `jur` and its descendants.
 pub fn enforcers_of(_w: &World, _jur: JurId) -> Vec<PersonId> { Vec::new() }
 /// The armed force an enforcer brings to a confrontation.

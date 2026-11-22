@@ -46,6 +46,14 @@ pub fn cast_ballots(_w: &mut World, _p: PersonId) {}
 /// Is there anything open today that `p` may vote on (bills or elections) and has not yet?
 pub fn has_ballot(_w: &World, _p: PersonId) -> bool { false }
 
+// ---- unrest
+/// Does this person mean to go and protest today? Called by `life` in the
+/// daytime; `life` then runs `law::attempt(Protest)`, walks them to the plaza
+/// with `Activity::Protest` and keeps `Civic::protesting` true while they stand there.
+/// During an uprising `Civic::rebelling` is set by this module and `life`
+/// sends such people to the plaza with `Activity::Rebel`.
+pub fn wants_to_protest(_w: &mut World, _p: PersonId) -> bool { false }
+
 // ---- player
 /// Start or stop living as a townsperson. Err if not allowed (the player holds office, the person is dead...).
 pub fn possess(_w: &mut World, _p: Option<PersonId>) -> Result<(), String> { Ok(()) }
