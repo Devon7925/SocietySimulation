@@ -722,6 +722,9 @@ pub struct World {
     pub stats: Stats,
     pub history: Vec<Stats>,
     pub chronicle: Vec<ChronicleEntry>,
+    /// The last day whose morning routines have run (-1 before the first).
+    #[serde(default = "minus_one")]
+    pub day_begun: i32,
 
     /// Per-module state. Each struct is owned by the named module.
     #[serde(default)]
@@ -742,6 +745,8 @@ pub struct World {
     pub forecast: crate::forecast::ForecastState,
 }
 
+fn minus_one() -> i32 { -1 }
+
 impl World {
     /// A world with nothing in it: no map, no people, no government.
     pub fn empty(seed: u64) -> World {
@@ -749,7 +754,7 @@ impl World {
             seed, rng: Rng::new(seed), slot: 6 * SLOTS_PER_HOUR, town_name: String::new(), settings: Settings::default(), depth: 0,
             map: Map::default(), places: Vec::new(), persons: Vec::new(), households: Vec::new(), firms: Vec::new(),
             polity: Default::default(), statutes: Vec::new(), status_names: Vec::new(), tech: Tech::default(),
-            stats: Stats::default(), history: Vec::new(), chronicle: Vec::new(),
+            stats: Stats::default(), history: Vec::new(), chronicle: Vec::new(), day_begun: -1,
             econ: Default::default(), law: Default::default(), enforce: Default::default(), gov: Default::default(), life: Default::default(),
             demo: Default::default(), research: Default::default(), forecast: Default::default(),
         }
