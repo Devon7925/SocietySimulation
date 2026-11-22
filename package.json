@@ -1,13 +1,14 @@
 {
   "name": "society-simulation",
   "version": "0.1.0",
-  "description": "A society and economy simulation where the player writes laws in plain English and watches a town of individuals respond.",
+  "description": "A town of individuals with their own preferences, an economy, and a government you can rewrite in plain English.",
   "type": "module",
   "private": true,
   "scripts": {
+    "build": "cd sim && cargo build --release --target wasm32-unknown-unknown && mkdir -p ../web/pkg && cp target/wasm32-unknown-unknown/release/society.wasm ../web/pkg/society.wasm",
     "start": "node server/index.js",
-    "test": "node --test test/",
-    "sim": "node test/headless.mjs"
+    "test": "cd sim && cargo test",
+    "sim": "cd sim && cargo run --release --bin run --"
   },
   "engines": {
     "node": ">=20"
