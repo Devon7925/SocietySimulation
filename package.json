@@ -1,0 +1,18 @@
+{
+  "name": "society-simulation",
+  "version": "0.1.0",
+  "description": "A society and economy simulation where the player writes laws in plain English and watches a town of individuals respond.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "node --test test/",
+    "sim": "node test/headless.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.12.0"
+  }
+}
