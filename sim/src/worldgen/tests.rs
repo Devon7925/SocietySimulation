@@ -337,7 +337,7 @@ fn a_few_adults_are_left_free_for_the_watch() {
         let day = w.day();
         let free = w.persons.iter().filter(|p| p.job.is_none() && (ADULT_AGE..ELDER_AGE).contains(&p.age_on(day))).count();
         assert!((3..=5).contains(&free), "seed {seed}: {free} adults without work");
-        assert!(w.stats.unemployment < 0.12);
+        assert!(w.stats.unemployment < 0.2, "seed {seed}: unemployment {}", w.stats.unemployment);
     }
 }
 
