@@ -20,6 +20,7 @@ pub mod life;
 pub mod demography;
 pub mod research;
 
+pub mod assess;
 pub mod forecast;
 pub mod stats;
 pub mod engine;

@@ -123,6 +123,8 @@ pub enum Clause {
     Court(CourtDef),
     /// The jurisdiction employs clerks, who audit taxes and keep its registers.
     Clerks { count: u32, #[serde(default = "ten")] wage: f32 },
+    /// An examination that measures something about a person, imperfectly, and puts the result on record.
+    Assessment(AssessmentDef),
     /// Abolish an office, body or unit by name.
     Abolish { name: String },
     /// Fund research in a field.
@@ -740,6 +742,31 @@ pub enum CourtDef {
     Jury { size: u32, #[serde(default = "adult")] pool: Expr },
 }
 impl Default for CourtDef { fn default() -> Self { CourtDef::Summary } }
+
+/// An official test. Clerks examine the people it covers and record a score
+/// from 0 to 1 that later statutes can read as `score("name")`. The score is
+/// the person's true disposition seen through a fog: a cheap, hurried test by
+/// poor record-keepers says little; a careful one says more, never everything.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct AssessmentDef {
+    /// A short snake_case name, used in expressions as `score("name")`.
+    pub name: String,
+    /// Which disposition the test tries to measure.
+    pub measures: Pref,
+    /// Who is examined (person scope).
+    #[serde(default = "adult")]
+    pub who: Expr,
+    /// How often each person is re-examined (`once` = a single time).
+    #[serde(default)]
+    pub period: Period,
+    /// Coins of clerks' time spent on each examination, from the treasury. More buys a sharper test.
+    #[serde(default = "one_f32")]
+    pub cost: f32,
+    /// What befalls those who refuse to sit it.
+    #[serde(default)]
+    pub sanction: Sanction,
+}
+fn one_f32() -> f32 { 1.0 }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]

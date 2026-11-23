@@ -352,6 +352,8 @@ pub fn eval_ast(ast: &Ast, sc: &dyn Scope) -> Value {
                 "==" => Value::Bool(eq(&a, &b)),
                 "!=" => Value::Bool(!eq(&a, &b)),
                 "in" => Value::Bool(matches!(&b, Value::List(items) if items.iter().any(|x| eq(&a, x)))),
+                // Something unknown is neither more nor less than anything.
+                "<" | "<=" | ">" | ">=" if a == Value::Null || b == Value::Null => Value::Bool(false),
                 "<" => Value::Bool(a.num() < b.num()),
                 "<=" => Value::Bool(a.num() <= b.num()),
                 ">" => Value::Bool(a.num() > b.num()),
@@ -453,6 +455,7 @@ mod tests {
         assert_eq!(eval_num("income % 5", &S, 0.0), 2.5);
         assert_eq!(eval_num("clamp(age, 0, 30) + max(1, 2)", &S, 0.0), 32.0);
         assert!(!eval_bool("unknown_thing > 3", &S, true));
+        assert!(!eval_bool("unknown_thing < 3", &S, true));
     }
     #[test]
     fn checking() {

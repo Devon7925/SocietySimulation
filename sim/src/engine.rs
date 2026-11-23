@@ -1,6 +1,6 @@
 //! The clock: what happens in what order.
 use crate::types::*;
-use crate::{demography, economy, enforce, gov, law, life, research, stats};
+use crate::{assess, demography, economy, enforce, gov, law, life, research, stats};
 
 fn start_of_day(w: &mut World) {
     let fork = w.is_fork();
@@ -9,6 +9,7 @@ fn start_of_day(w: &mut World) {
     demography::start_of_day(w);
     law::start_of_day(w);
     enforce::start_of_day(w);
+    assess::start_of_day(w);
     economy::start_of_day(w);
     research::start_of_day(w);
     if !fork { gov::start_of_day(w); }

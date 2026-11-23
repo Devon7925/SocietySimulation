@@ -318,6 +318,9 @@ pub struct Person {
     /// Recent occasions on which they did, or wanted to do, something (newest last, capped).
     #[serde(default)]
     pub wishes: Vec<crate::statute::Wish>,
+    /// Official test results on record: (index into `World::assessment_names`, score 0..=1, day taken).
+    #[serde(default)]
+    pub scores: Vec<(u16, f32, i32)>,
 
     /// Per-module state. Each struct is owned by the named module.
     #[serde(default)]
@@ -341,7 +344,7 @@ impl Person {
             loc, activity: Activity::Idle, until: 0, doing: String::new(), thought: String::new(), travel: None, next: None,
             spouse: None, mother: None, father: None, children: Vec::new(), friends: Vec::new(),
             statuses: 0, convictions: 0, jailed_until: None, sterile: false, immigrant: false, enrolled: false,
-            income: Income::default(), felt: Felt::default(), wellbeing: Wellbeing::default(), trust: 0.5, opinions: Vec::new(), diary: Vec::new(), wishes: Vec::new(),
+            income: Income::default(), felt: Felt::default(), wellbeing: Wellbeing::default(), trust: 0.5, opinions: Vec::new(), diary: Vec::new(), wishes: Vec::new(), scores: Vec::new(),
             mind: Default::default(), fiscal: Default::default(), civic: Default::default(), legal: Default::default(), work: Default::default(),
         }
     }
@@ -355,6 +358,8 @@ impl Person {
     pub fn set_opinion(&mut self, s: StatuteId, v: f32) {
         match self.opinions.iter_mut().find(|(id, _)| *id == s) { Some(e) => e.1 = v, None => self.opinions.push((s, v)) }
     }
+    /// Their recorded score on an assessment, if they have sat it.
+    pub fn score(&self, ix: usize) -> Option<f32> { self.scores.iter().find(|(i, _, _)| *i as usize == ix).map(|(_, v, _)| *v) }
     pub fn affinity(&self, other: PersonId) -> f32 { self.friends.iter().find(|f| f.id == other).map(|f| f.affinity).unwrap_or(0.0) }
     pub fn befriend(&mut self, other: PersonId, delta: f32) {
         match self.friends.iter_mut().find(|f| f.id == other) {
@@ -717,6 +722,9 @@ pub struct World {
     pub statutes: Vec<crate::statute::Statute>,
     /// Names of legal statuses; a person's `statuses` bitset indexes this.
     pub status_names: Vec<String>,
+    /// Names of official assessments; `Person::scores` indexes this.
+    #[serde(default)]
+    pub assessment_names: Vec<String>,
     pub tech: Tech,
 
     pub stats: Stats,
@@ -753,7 +761,7 @@ impl World {
         World {
             seed, rng: Rng::new(seed), slot: 6 * SLOTS_PER_HOUR, town_name: String::new(), settings: Settings::default(), depth: 0,
             map: Map::default(), places: Vec::new(), persons: Vec::new(), households: Vec::new(), firms: Vec::new(),
-            polity: Default::default(), statutes: Vec::new(), status_names: Vec::new(), tech: Tech::default(),
+            polity: Default::default(), statutes: Vec::new(), status_names: Vec::new(), assessment_names: Vec::new(), tech: Tech::default(),
             stats: Stats::default(), history: Vec::new(), chronicle: Vec::new(), day_begun: -1,
             econ: Default::default(), law: Default::default(), enforce: Default::default(), gov: Default::default(), life: Default::default(),
             demo: Default::default(), research: Default::default(), forecast: Default::default(),

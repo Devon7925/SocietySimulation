@@ -18,7 +18,7 @@ pub const PERSON_VARS: [&str; 41] = [
     "wealth_percentile", "income", "wage", "employed", "job", "workplace", "employer_type", "is_owner", "is_landlord", "owns_home", "properties", "homeless",
     "education", "health", "convictions", "is_enforcer", "is_official", "immigrant", "in_school", "ward", "office", "jailed", "sterile", "parents_alive", "siblings", "born_day", "spouse",
 ];
-pub const PERSON_FUNCS: [&str; 3] = ["has", "holds", "member"];
+pub const PERSON_FUNCS: [&str; 5] = ["has", "holds", "member", "score", "tested"];
 pub const ACT_VARS: [&str; 16] = ["good", "price", "quantity", "place", "place_ward", "place_owner", "hours_today", "act_wage", "property_type", "property_value", "properties_owned", "worker", "firm_type", "firm_owner", "amount", "subject"];
 pub const PLACE_VARS: [&str; 13] = ["id", "name", "type", "value", "owner_type", "owner", "workers", "residents", "is_rented", "is_business", "is_home", "ward", "rent"];
 
@@ -103,6 +103,9 @@ fn person_call(w: &World, pid: PersonId, name: &str, args: &[Value]) -> Option<V
     match name {
         "has" => Some(w.status_ix(arg).map(|i| w.person(pid).has_status(i)).unwrap_or(false).into()),
         "holds" => Some(w.polity.offices.iter().any(|o| !o.abolished && o.holder == Some(crate::polity::Actor::Person(pid)) && o.def.name.eq_ignore_ascii_case(arg)).into()),
+        // An untested person has no score: `score("x") < 0.3` is false for them, as is `score("x") > 0.3`.
+        "score" => Some(w.assessment_names.iter().position(|n| n.eq_ignore_ascii_case(arg)).and_then(|i| w.person(pid).score(i)).map(Value::from).unwrap_or(Value::Null)),
+        "tested" => Some(w.assessment_names.iter().position(|n| n.eq_ignore_ascii_case(arg)).and_then(|i| w.person(pid).score(i)).is_some().into()),
         "member" => Some(w.polity.bodies.iter().any(|b| !b.abolished && b.members.contains(&crate::polity::Actor::Person(pid)) && b.def.name.eq_ignore_ascii_case(arg)).into()),
         _ => None,
     }
