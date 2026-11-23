@@ -95,6 +95,10 @@ pub fn end_of_day(w: &mut World) {
     refresh(w);
     w.stats.revenue = w.polity.jurisdictions.iter().map(|j| j.revenue_today).sum();
     w.stats.spending = w.polity.jurisdictions.iter().map(|j| j.spending_today).sum();
+    w.stats.births = w.demo.births_today;
+    w.stats.deaths = w.demo.deaths_today;
+    w.stats.arrivals = w.demo.arrivals_today;
+    w.stats.departures = w.demo.departures_today;
     w.stats.protesters = w.persons.iter().filter(|p| p.present && p.civic.protesting).count() as u32;
     if !w.is_fork() {
         let snap = w.stats.clone();

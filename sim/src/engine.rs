@@ -18,6 +18,7 @@ fn start_of_day(w: &mut World) {
 
 fn end_of_day(w: &mut World) {
     let fork = w.is_fork();
+    research::end_of_day(w); // before payroll clears the day's work records
     economy::end_of_day(w);
     law::end_of_day(w);
     life::end_of_day(w);
