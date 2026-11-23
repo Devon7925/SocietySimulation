@@ -124,7 +124,9 @@ fn someone_leaving_walks_to_a_gate() {
     assert_eq!(w.person(t.greta).travel.map(|x| x.to), Some(gate));
     w.slot += 1;
     update_person(&mut w, t.greta);
-    assert_eq!((w.person(t.greta).loc, w.person(t.greta).activity), (gate, Activity::Leaving));
+    // On reaching the gate they are gone from the town.
+    assert_eq!(w.person(t.greta).loc, gate);
+    assert!(!w.person(t.greta).present);
 }
 
 #[test]
