@@ -61,7 +61,7 @@ pub fn start_of_day(w: &mut World) {
                 enforce::report_offence(w, Offence { offender: pid, statute: sid, clause, place, trail: Trail::Paper, gain: mind, stake: 0.0, what: format!("refusing the {} examination", def.name.replace('_', " ")), sanction: def.sanction.clone(), fine, victim: None });
                 continue;
             }
-            if law::treasury_pay(w, jur, def.cost, Some(sid)) + 1e-3 < def.cost { capacity = 0; break; } // no coin, no clerks' time
+            if law::treasury_pay(w, jur, def.cost, Some(sid)) + 1e-3 < def.cost { break; } // no coin, no clerks' time
             capacity -= 1;
             let sd = error_sd(w, def.cost);
             let truth = w.person(pid).prefs[def.measures];
